@@ -1,0 +1,31 @@
+# JS
+node_modules/
+npm-debug.log*
+
+# Rust / Gear
+/target/
+**/target/
+*.wasm
+*.opt.wasm
+*.binpath
+
+# generated deploy output
+.outputs/
+
+# local temp/logs
+tmp/
+temp/
+*.log
+logs/
+.DS_Store
+
+# secrets / wallets
+.env
+.env.*
+*.pem
+*.key
+*.seed
+*.secret
+*wallet*.json
+*keystore*.json
+mnemonic*

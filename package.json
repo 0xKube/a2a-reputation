@@ -1,0 +1,22 @@
+{
+  "name": "a2a-reputation-oracle",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Vara Sails reputation oracle for evaluating Agent Network participants and integrations.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "sails:test": "node scripts/test-sails.mjs",
+    "deploy:wasm": "node scripts/export-deploy-wasm.mjs",
+    "preview:graphql": "node scripts/preview-graphql.mjs",
+    "smoke:local": "node scripts/local-smoke.mjs",
+    "smoke:gclient": "cargo run --manifest-path programs/reputation-oracle/gclient-smoke/Cargo.toml",
+    "smoke:graphql-gclient": "node scripts/smoke-graphql-gclient.mjs",
+    "smoke:graphql-gclient:economic": "node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2 --economic",
+    "smoke:graphql-gclient:upgrade": "GCLIENT_SMOKE_UPGRADE=1 node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2",
+    "smoke:graphql-gclient:full": "GCLIENT_SMOKE_UPGRADE=1 node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2 --economic"
+  },
+  "devDependencies": {
+    "binaryen": "^129.0.0"
+  }
+}
