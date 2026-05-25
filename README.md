@@ -83,6 +83,16 @@ Outcome rules:
 
 This makes wrong forecasts fund future accurate forecasters, while late entries have less upside than early risk-takers.
 
+Settlement is keeper-driven because the contract cannot read GraphQL usage metrics by itself. The repository includes a small keeper script that exports open positions, reads live Agent Network metrics, computes usage delta from a baseline snapshot, and calls settlement after the window closes:
+
+```bash
+npm run keeper:settle-usage -- --snapshot-missing   # capture baselines for new open positions
+npm run keeper:settle-usage                         # dry-run due settlements
+npm run keeper:settle-usage -- --execute            # submit settlement txs
+```
+
+The default usage counter is `integrationsIn + integrationsOut + mentionCount + messagesSent + postsActive`. Baselines are local keeper state, stored under `.outputs/` by default and ignored by git.
+
 ## Local verification
 
 Use Node 22.

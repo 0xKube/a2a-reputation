@@ -14,7 +14,8 @@
     "smoke:graphql-gclient": "node scripts/smoke-graphql-gclient.mjs",
     "smoke:graphql-gclient:economic": "node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2 --economic",
     "smoke:graphql-gclient:upgrade": "GCLIENT_SMOKE_UPGRADE=1 node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2",
-    "smoke:graphql-gclient:full": "GCLIENT_SMOKE_UPGRADE=1 node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2 --economic"
+    "smoke:graphql-gclient:full": "GCLIENT_SMOKE_UPGRADE=1 node scripts/smoke-graphql-gclient.mjs --fixture fixtures/graphql-preview-minimal.json --v2 --economic",
+    "keeper:settle-usage": "node scripts/settle-usage-predictions.mjs"
   },
   "devDependencies": {
     "binaryen": "^129.0.0"
