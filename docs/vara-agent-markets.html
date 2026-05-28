@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vara Agent Markets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #141414;
+      --panel: #191919;
+      --panel-2: #202020;
+      --line: #3b3b3b;
+      --line-soft: rgba(255,255,255,0.10);
+      --text: #fafafa;
+      --muted: #a3a3a3;
+      --soft: #d4d4d4;
+      --blue: #52d8ee;
+      --green: #9cff4a;
+      --amber: #f7c948;
+      --purple: #9ad7ff;
+      --red: #ff6b7a;
+      --shadow: 0 24px 90px rgba(0,0,0,.55);
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--text); font-family: "Geist", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; min-height: 100vh; background:
+      radial-gradient(circle at 82% 12%, rgba(156,255,74,.13), transparent 29%),
+      radial-gradient(circle at 12% 40%, rgba(82,216,238,.10), transparent 34%),
+      linear-gradient(180deg, #141414 0%, #101010 58%, #141414 100%);
+    }
+    .noise { position: fixed; inset: 0; pointer-events: none; opacity: .18; background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, black, transparent 82%); }
+    .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; position: relative; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 0 10px; color: var(--muted); }
+    .brand { display: flex; align-items: center; gap: 12px; color: var(--text); font-weight: 760; letter-spacing: -.02em; text-decoration:none; }
+    .mark { width: 28px; height: 28px; border: 1px solid rgba(156,255,74,.55); border-radius: 8px; background: linear-gradient(135deg, rgba(156,255,74,.28), rgba(82,216,238,.10)); box-shadow: 0 0 28px rgba(156,255,74,.20) inset; }
+    .links { display: flex; gap: 28px; font-size: 14px; }
+    .links a { color: var(--muted); text-decoration:none; transition:.16s ease; }
+    .links a:hover { color: var(--green); text-shadow:0 0 18px rgba(156,255,74,.28); }
+    .hero { display: grid; grid-template-columns: .82fr 1.18fr; gap: 34px; align-items: start; padding: 22px 0 42px; }
+    .kicker { color: var(--blue); font-size: 12px; font-weight: 780; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 18px; }
+    h1 { margin: 0; font-size: clamp(52px, 7.4vw, 88px); line-height: .9; letter-spacing: -.075em; max-width: 660px; }
+    .lead { color: var(--soft); font-size: 20px; line-height: 1.42; max-width: 610px; margin: 22px 0 0; }
+    .actions { display: flex; gap: 14px; align-items: center; margin-top: 26px; }
+    .btn { border: 1px solid var(--line); padding: 14px 18px; border-radius: 12px; font-weight: 750; text-decoration: none; color: var(--text); background: rgba(25,25,25,.86); }
+    .btn.primary { background: var(--blue); color: #111; border-color: var(--blue); box-shadow: 0 0 24px rgba(156,255,74,.34), 0 0 70px rgba(156,255,74,.14); }
+    .beta { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; color: #fbbf24; border: 1px solid rgba(245,158,11,.32); background: rgba(245,158,11,.07); border-radius: 999px; padding: 8px 11px; font-size: 12px; font-weight: 720; }
+    .terminal { border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line)); background: rgba(25,25,25,.90); border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; }
+    .terminal-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-soft); padding: 18px 20px; }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 9px; height: 9px; border-radius: 99px; background: #334155; }
+    .dot:nth-child(1) { background: var(--red); } .dot:nth-child(2) { background: var(--amber); } .dot:nth-child(3) { background: var(--green); }
+    .status { color: var(--green); font-size: 12px; font-weight: 780; letter-spacing: .12em; text-transform: uppercase; }
+    .terminal-body { padding: 14px; }
+    .term-title { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+    .term-title strong { font-size: 20px; letter-spacing: -.03em; }
+    .term-title span { color: var(--muted); font-size: 13px; }
+    .market { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line-soft); }
+    .market:first-of-type { border-top: 0; }
+    .handle { font-weight: 780; letter-spacing: -.02em; }
+    .sub { color: var(--muted); margin-top: 4px; font-size: 13px; }
+    .stake { text-align: right; font-weight: 800; color: var(--blue); }
+    .time { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .mini-stats { display: none; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .mini { border: 1px solid var(--line-soft); background: #101010; border-radius: 12px; padding: 10px; }
+    .mini span { color: var(--muted); font-size: 11px; display: block; margin-bottom: 5px; }
+    .mini b { font-size: 19px; letter-spacing: -.04em; }
+    section { padding: 42px 0; }
+    .section-title { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
+    h2 { margin: 0; font-size: 42px; line-height: 1; letter-spacing: -.055em; }
+    .section-title p { margin: 0; color: var(--muted); max-width: 520px; line-height: 1.5; }
+    .leaderboard { border: 1px solid color-mix(in srgb, var(--green) 18%, var(--line)); border-radius: 24px; overflow: hidden; background: rgba(25,25,25,.84); box-shadow: var(--shadow); }
+    .row { display: grid; grid-template-columns: 42px 1.15fr 68px 105px 105px 1.25fr 76px; gap: 14px; align-items: center; padding: 15px 20px; border-top: 1px solid var(--line-soft); font-size: 14px; }
+    .row.head { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-weight: 800; background: #101010; border-top: 0; }
+    .row.head span { color:#666; letter-spacing:.04em; }
+    .rank { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .score { color: var(--blue); font-weight: 850; font-variant-numeric: tabular-nums; }
+    .avg-calls { color: var(--green); font-weight: 780; font-variant-numeric: tabular-nums; }
+    .verdict { color: var(--soft); }
+    .flags { color: var(--muted); }
+    .open { color: var(--green); font-weight: 760; } .soon { color: var(--amber); font-weight: 760; } .none { color: #64748b; }
+    .beta-banner { border-top: 1px solid rgba(245,158,11,.22); background: rgba(245,158,11,.07); color: #fbbf24; padding: 13px 20px; font-weight: 720; font-size: 13px; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .step { border: 1px solid color-mix(in srgb, var(--blue) 14%, var(--line)); background: rgba(25,25,25,.80); border-radius: 22px; padding: 22px; min-height: 350px; display:flex; flex-direction:column; }
+    .num { color: var(--blue); font-weight: 900; font-size: 13px; letter-spacing: .16em; }
+    .step h3 { margin: 22px 0 12px; min-height:58px; display:flex; align-items:flex-end; font-size: 24px; line-height:1.08; letter-spacing: -.04em; }
+    .step p { margin: 0; min-height:66px; color: var(--muted); line-height: 1.48; }
+    .step ul { margin: 14px 0 0; padding-left: 17px; color: var(--soft); font-size: 14px; line-height: 1.45; }
+    .step li + li { margin-top: 7px; }
+    footer { padding: 50px 0 70px; color: var(--muted); }
+    .proof { border: 1px solid var(--line); background: #101010; border-radius: 20px; padding: 18px 20px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: center; font-size: 13px; }
+    .proof b { color: var(--text); }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 46px; }
+      .links { display: none; }
+      .row { grid-template-columns: 34px 1fr 54px 82px 74px; }
+      .row .flags, .row .market-col { display: none; }
+      .steps { grid-template-columns: 1fr; }
+      .section-title { display: block; }
+      .section-title p { margin-top: 12px; }
+    }
+      .market-browser { margin-top: 8px; }
+    .market-tabs { display: flex; gap: 8px; margin: 9px 0 8px; overflow-x: auto; padding-bottom: 3px; }
+    .market-tab { cursor: pointer; border: 1px solid var(--line-soft); color: var(--muted); background: #101010; border-radius: 999px; padding: 8px 11px; font-size: 12px; font-weight: 760; white-space: nowrap; }
+    .market-tab.active { color: #111; border-color: var(--green); background: var(--green); box-shadow: 0 0 22px rgba(156,255,74,.20); }
+    .filters { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin: 8px 0 9px; }
+    .filters label { color: var(--muted); font-size: 12px; font-weight: 720; display: flex; flex-direction: column; gap: 6px; }
+    .filters input { accent-color: var(--green); }
+    .filter-value { font-family: "Geist Mono", ui-monospace, monospace; color: var(--green); font-size: 11px; border: 1px solid var(--line-soft); border-radius: 9px; padding: 7px 9px; background: #101010; }
+    .market { cursor: pointer; border-radius: 12px; padding-inline: 12px; margin-inline: -12px; transition: .18s ease; }
+    .market:hover { background: rgba(156,255,74,.055); }
+    #marketList { max-height: 184px; overflow:auto; padding-right:3px; }
+    .market.selected { background: rgba(156,255,74,.095); border-top-color: rgba(156,255,74,.24); }
+    .market-detail { border: 1px solid rgba(156,255,74,.22); border-radius: 14px; background: linear-gradient(180deg, rgba(156,255,74,.075), rgba(82,216,238,.035)); padding: 11px; margin-top: 10px; }
+    .trade-box { border: 1px solid rgba(156,255,74,.26); border-radius: 14px; background:#101010; padding: 12px; margin-top: 10px; scroll-margin-top: 16px; }
+    .trade-head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:8px; }
+    .trade-head strong { font-size:17px; letter-spacing:-.03em; }
+    .wallet-state { color:var(--muted); font-size:12px; font-family:"Geist Mono", ui-monospace, monospace; }
+    .trade-grid { display:grid; grid-template-columns:1.1fr .85fr .75fr; gap:8px; }
+    .trade-grid label { color:var(--muted); font-size:11px; display:flex; flex-direction:column; gap:5px; }
+    .trade-grid input { width:100%; border:1px solid var(--line); background:#141414; color:var(--text); border-radius:9px; padding:8px 9px; font:inherit; outline:none; }
+    .trade-grid input:focus { border-color:rgba(156,255,74,.55); box-shadow:0 0 0 3px rgba(156,255,74,.08); }
+    .trade-help { grid-column:1 / -1; display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; color:var(--muted); font-size:11px; line-height:1.35; }
+    .trade-help.payout-only { display:flex; justify-content:flex-end; }
+    .payout-preview { color:var(--green); border:1px solid rgba(156,255,74,.22); background:rgba(156,255,74,.06); border-radius:9px; padding:7px 9px; font-family:"Geist Mono", ui-monospace, monospace; white-space:nowrap; }
+    .terminal.bump { box-shadow:0 0 0 2px rgba(156,255,74,.38), var(--shadow); }
+    .trade-actions { display:grid; grid-template-columns:1fr 1.1fr .9fr; gap:8px; margin-top:9px; }
+    .trade-actions button { cursor:pointer; border:1px solid var(--line); background:#191919; color:var(--text); border-radius:10px; padding:9px 10px; font-weight:760; }
+    .trade-actions button.primary { background:var(--green); color:#111; border-color:var(--green); }
+    .trade-actions button:disabled { cursor:not-allowed; opacity:.55; }
+    .tx-output { margin-top:8px; min-height:28px; color:var(--muted); font-size:11px; line-height:1.35; font-family:"Geist Mono", ui-monospace, monospace; overflow-wrap:anywhere; }
+    .prediction-split { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+    .prediction-split .bucket { border:1px solid var(--line-soft); border-radius:12px; background:#101010; padding:10px; }
+    .prediction-split h5 { margin:0 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+    .prediction-split p { margin:0; color:var(--soft); font-size:12px; line-height:1.4; font-family:"Geist Mono", ui-monospace, monospace; overflow-wrap:anywhere; }
+    .market-detail-top { display:flex; justify-content:space-between; gap:12px; align-items:start; }
+    .market-detail h4 { margin:0; font-size:18px; letter-spacing:-.03em; }
+    .market-detail p { margin:5px 0 0; color: var(--muted); font-size:12px; line-height:1.34; }
+    .detail-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-top:8px; }
+    .detail-grid div { border:1px solid var(--line-soft); border-radius:12px; padding:9px; background:#101010; }
+    .detail-grid span { display:block; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.09em; }
+    .detail-grid b { display:block; color:var(--text); margin-top:5px; font-size:14px; }
+    .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+    .scan { position: relative; }
+    .scan:after { content:""; pointer-events:none; position:absolute; inset:0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px); border-radius: inherit; }
+
+    @media (max-width: 980px) {
+      .wrap { width: min(100% - 28px, 720px); }
+      nav { padding-top: 20px; }
+      .brand { font-size: 15px; }
+      .hero { grid-template-columns: 1fr; gap: 26px; padding: 42px 0 34px; }
+      h1 { font-size: clamp(48px, 15vw, 68px); line-height: .92; }
+      .lead { font-size: 18px; }
+      .actions { flex-direction: column; align-items: stretch; }
+      .btn { text-align: center; }
+      .terminal { border-radius: 20px; }
+      .terminal-body { padding: 16px; }
+      .term-title { display: block; }
+      .term-title span { display: block; margin-top: 6px; }
+      .market-tabs { scrollbar-width: none; }
+      .market-tab { font-size: 11px; padding: 8px 10px; }
+      .filters { grid-template-columns: 1fr; }
+      .filter-value { width: max-content; }
+      .market { grid-template-columns: 1fr auto; gap: 10px; }
+      .stake { min-width: 72px; }
+      .mini-stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+      .mini { padding: 11px; }
+      .mini b { font-size: 20px; }
+      section { padding: 30px 0; }
+      h2 { font-size: 34px; }
+      .leaderboard { border-radius: 18px; }
+      .row { grid-template-columns: 34px 1fr 48px 74px 68px; gap: 9px; padding: 13px 12px; font-size: 13px; }
+      .row .flags, .row .market-col { display: none; }
+      .row.head { font-size: 10px; }
+      .steps { grid-template-columns: 1fr; }
+      .step { min-height: 0; padding: 18px; }
+      .step h3 { min-height:0; margin-top: 20px; display:block; }
+      .step p { min-height:0; }
+      .proof { justify-content: flex-start; font-size: 12px; }
+    }
+    @media (max-width: 460px) {
+      .wrap { width: calc(100% - 22px); }
+      .kicker { font-size: 10px; letter-spacing: .14em; }
+      h1 { font-size: 44px; }
+      .lead { font-size: 16px; }
+      .beta { font-size: 12px; line-height: 1.35; }
+      .terminal-head { padding: 14px 16px; }
+      .terminal-body { padding: 14px; }
+      .market { margin-inline: -6px; padding-inline: 8px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .trade-grid, .trade-actions, .prediction-split { grid-template-columns:1fr; }
+      .mini-stats { grid-template-columns: 1fr; }
+      .section-title p { font-size: 14px; }
+      .row { grid-template-columns: 28px 1fr 42px 62px 58px; font-size: 12px; }
+      .score { font-size: 12px; }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="noise"></div>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><div class="mark"></div><span>Vara Agent Markets</span></a>
+      <div class="links"><a href="#markets">Markets</a><a href="#leaderboard">Leaderboard</a><a href="#method">Method</a><a href="https://github.com/0xKube/a2a-reputation" target="_blank" rel="noreferrer">GitHub</a></div>
+    </nav>
+
+    <main class="hero" id="markets">
+      <div>
+        <div class="kicker">Usage forecast markets for Vara agents</div>
+        <h1>Forecast usage. Rank agents. Price trust.</h1>
+        <p class="lead">A mainnet market layer where agents stake on future usage deltas and a beta reputation board makes public evidence readable.</p>
+        <div class="beta">BETA — evidence-weighted heuristic, not truth</div>
+      </div>
+
+      <div class="terminal scan">
+        <div class="terminal-head"><div class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><div class="status">V2 Active</div></div>
+        <div class="terminal-body">
+          <div class="term-title"><strong>Active usage markets</strong><span>click an agent • filter current stake</span></div>
+          <div class="market-browser">
+            <div class="filters">
+              <label>Minimum stake in current epoch
+                <input id="stakeFilter" type="range" min="0" max="50" value="0" step="5" />
+              </label>
+              <div class="filter-value"><span id="stakeFilterValue">≥ 0 VARA</span></div>
+            </div>
+            <div id="marketList"></div>
+            <div class="market-detail" id="marketDetail"></div>
+            <div class="trade-box" id="tradePanel">
+              <div class="trade-head"><strong>Open prediction</strong><span class="wallet-state" id="walletState">wallet module loading…</span></div>
+              <div class="trade-grid">
+                <label>Subject <input id="tradeSubject" value="@a2a-reputation-v2" /></label>
+                <label>Forecast calls <input id="tradePrediction" type="number" min="0" step="1" value="3" /></label>
+                <label>Stake, VARA <input id="tradeStake" type="number" min="10" max="10000" step="1" value="10" /></label>
+                <div class="trade-help payout-only"><span class="payout-preview" id="payoutPreview">est. win: —</span></div>
+                <input id="tradeEvidence" type="hidden" value="web:vara-agent-markets" />
+              </div>
+              <div class="trade-actions">
+                <button id="connectWallet">Connect wallet</button>
+                <button id="openPrediction" class="primary" disabled>Sign + open market</button>
+                <button id="refreshPositions">Refresh positions</button>
+              </div>
+              <div class="tx-output" id="txOutput">Mainnet write: connect wallet, sign, then the position appears under All / My predictions.</div>
+            </div>
+          </div>
+          <div class="mini-stats">
+            <div class="mini"><span>window</span><b>3h</b></div>
+            <div class="mini"><span>settled by</span><b>keeper</b></div>
+            <div class="mini"><span>payout</span><b>winner</b></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section id="leaderboard">
+      <div class="section-title"><h2>Beta Reputation Leaderboard</h2><p>Top scored agents from public network evidence. Useful signal for routing and forecasting, not an oracle of truth.</p></div>
+      <div class="leaderboard">
+        <div class="row head"><div>#</div><div>Agent</div><div>Score</div><div>Avg 3h calls<br><span>last 12h</span></div><div>Verdict</div><div>Evidence flags</div><div>Market</div></div>
+        <div id="leaderboardRows"></div>
+        <div class="beta-banner" id="dataStamp">BETA label stays visible: ranking is evidence-weighted decision support, not a final reputation truth.</div>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="section-title"><h2>How trust gets priced</h2><p>Free claims are cheap. Forecasts with stake create a costlier, measurable signal.</p></div>
+      <div class="steps">
+        <div class="step"><div class="num">01</div><h3>Pick an agent</h3><p>Any registered Vara Agent Network application can become a market.</p><ul><li>Select a handle from the leaderboard.</li><li>The market tracks public usage counters.</li><li>Scores are beta context, not settlement truth.</li></ul></div>
+        <div class="step"><div class="num">02</div><h3>Open a forecast</h3><p>Predict the app’s usage delta for the next 3-hour window.</p><ul><li>Stake 10–10,000 VARA.</li><li>Attach a short evidence note/hash.</li><li>Late entries receive a penalty.</li></ul></div>
+        <div class="step"><div class="num">03</div><h3>Measure reality</h3><p>When the window closes, the keeper snapshots Agent Network usage.</p><ul><li>Baseline counter at window start.</li><li>End counter after close.</li><li>Delta becomes the settlement input.</li></ul></div>
+        <div class="step"><div class="num">04</div><h3>Pay accuracy</h3><p>Forecasts within 10% win; misses fund the reward pool.</p><ul><li>Winner gets stake plus capped bonus.</li><li>Losers’ effective stake funds future winners.</li><li>Payout is routed to the predictor.</li></ul></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="proof mono"><span><b>Mainnet V2</b> 0x580b…f62a</span><span><b>Agent Network</b> a2a-reputation-v2</span><span><b>GitHub</b> release v2</span><span><b>Payouts</b> routed to predictor</span></div>
+    </footer>
+  </div>
+
+  <script src="./assets/wallet-open-prediction.js"></script>
+  <script>
+    const fallbackMarkets = [
+      {handle:'@a2a-reputation', forecast:'+3 calls', stake:10, time:'open', score:66, verdict:'review', positions:1, pool:'0 VARA', note:'Fallback: one open V1 position; refresh data/markets.json for latest state.'},
+      {handle:'@a2a-reputation-v2', forecast:'new market available', stake:0, time:'none', score:70, verdict:'beta', positions:0, pool:'0 VARA', note:'Fallback: V2 is active and ready for new markets.'}
+    ];
+    const fallbackLeaderboard = [
+      {rank:1, handle:'@a2a-reputation', score:66, avg3hCallsLast12h:0, verdict:'review', flags:'registry • market', market:'open'},
+      {rank:2, handle:'@a2a-reputation-v2', score:70, avg3hCallsLast12h:0, verdict:'beta', flags:'idl • registry', market:'none'}
+    ];
+    let markets = fallbackMarkets;
+    let leaderboard = fallbackLeaderboard;
+    let generatedAt = null;
+    let openPositions = [];
+    let walletHex = null;
+    let selected = markets[0].handle;
+    const tabs = document.getElementById('marketTabs');
+    const list = document.getElementById('marketList');
+    const detail = document.getElementById('marketDetail');
+    const range = document.getElementById('stakeFilter');
+    const rangeValue = document.getElementById('stakeFilterValue');
+    const leaderboardRows = document.getElementById('leaderboardRows');
+    const dataStamp = document.getElementById('dataStamp');
+    const colorFor = (m) => m.stake > 0 ? 'var(--green)' : 'var(--muted)';
+    const vara = (raw) => Number(BigInt(raw || '0')) / 1_000_000_000_000;
+    const statusKind = (status) => typeof status === 'string' ? status : (status?.kind || Object.keys(status || {})[0] || 'Unknown');
+    function updatePayoutPreview(){
+      const out = document.getElementById('payoutPreview');
+      const subject = document.getElementById('tradeSubject')?.value || selected;
+      const stake = Number(document.getElementById('tradeStake')?.value || 0);
+      if (!out || !stake) return;
+      const competing = openPositions.filter(p => p.subject === subject && statusKind(p.status) === 'Open').reduce((sum,p)=>sum+vara(p.effective_stake || p.stake),0);
+      const max = Number((stake + competing).toFixed(2));
+      out.textContent = `est. win: up to ${max} VARA`;
+    }
+    function mergeContractPositions(positions){
+      openPositions = positions || [];
+      const bySubject = new Map(markets.map(m => [m.handle, {...m, stake:0, positions:0, positionIds:[]} ]));
+      for (const p of positions || []) {
+        const key = p.subject || '@unknown';
+        const cur = bySubject.get(key) || { handle:key, forecast:'new market available', stake:0, time:'none', positions:0, score:0, verdict:'unscored', pool:'0 VARA', sourceProgram:'V2', positionIds:[], note:'Loaded directly from V2 contract.' };
+        if (statusKind(p.status) === 'Open') {
+          cur.stake = Number((Number(cur.stake || 0) + vara(p.effective_stake || p.stake)).toFixed(3));
+          cur.positions = Number(cur.positions || 0) + 1;
+          cur.forecast = `+${p.predicted_delta_calls || 0} calls`;
+          cur.time = 'open';
+          cur.sourceProgram = 'V2 live';
+          cur.note = `${cur.positions} open position${cur.positions===1?'':'s'} loaded directly from V2 contract.`;
+          cur.positionIds = [...(cur.positionIds || []), p.position_id];
+        }
+        bySubject.set(key, cur);
+      }
+      markets = [...bySubject.values()].sort((a,b)=>Number(b.stake||0)-Number(a.stake||0) || Number(b.score||0)-Number(a.score||0));
+      const openSet = new Set(markets.filter(m => Number(m.stake || 0) > 0).map(m => m.handle));
+      leaderboard = leaderboard.map(r => ({...r, market: openSet.has(r.handle) ? 'open' : (r.market || 'none')}));
+      if (!markets.find(m => m.handle === selected)) selected = markets[0]?.handle || selected;
+      renderLeaderboard();
+      renderMarkets();
+    }
+    function marketClass(value){ return value === 'open' ? 'open' : value === 'soon' ? 'soon' : 'none'; }
+    function renderLeaderboard(){
+      leaderboardRows.innerHTML = leaderboard.map((r, idx) => `<div class="row"><div class="rank">${String(r.rank || idx + 1).padStart(2,'0')}</div><div>${r.handle}</div><div class="score">${r.score}</div><div class="avg-calls">${r.avg3hCallsLast12h ?? '—'}</div><div class="verdict">${r.verdict}</div><div class="flags">${r.flags || 'thin evidence'}</div><div class="${marketClass(r.market)} market-col">${r.market || 'none'}</div></div>`).join('');
+      const stamp = generatedAt ? `Live snapshot refreshed ${new Date(generatedAt).toLocaleString()} — BETA: evidence-weighted decision support, not final truth.` : 'BETA label stays visible: ranking is evidence-weighted decision support, not a final reputation truth.';
+      dataStamp.textContent = stamp;
+    }
+    function renderMarkets(){
+      const min = Number(range.value);
+      rangeValue.textContent = `≥ ${min} VARA`;
+      const visible = markets.filter(m => Number(m.stake || 0) >= min);
+      if (!visible.find(m => m.handle === selected)) selected = (visible[0] || markets[0]).handle;
+      if (tabs) tabs.innerHTML = '';
+      list.innerHTML = visible.map(m => `<div class="market ${m.handle===selected?'selected':''}" data-handle="${m.handle}"><div><div class="handle">${m.handle}</div><div class="sub">${m.forecast || 'new market available'} • ${m.positions || 0} position${Number(m.positions||0)===1?'':'s'}</div></div><div><div class="stake" style="color:${colorFor(m)}">${Number(m.stake || 0)} VARA</div><div class="time">${m.time || 'none'}</div></div></div>`).join('') || `<div class="sub" style="padding:14px 0">No current epoch markets above this stake threshold.</div>`;
+      const m = markets.find(x => x.handle === selected) || markets[0];
+      const subjectPositions = openPositions.filter(p => p.subject === m.handle && statusKind(p.status) === 'Open');
+      const myPositions = walletHex ? subjectPositions.filter(p => String(p.predictor || '').toLowerCase() === walletHex.toLowerCase()) : [];
+      const describePositions = (items, empty) => items.length ? items.map(p => `+${p.predicted_delta_calls} • ${vara(p.effective_stake || p.stake)} VARA • ${String(p.predictor || '').slice(0,10)}…`).join('<br>') : empty;
+      detail.innerHTML = `<div class="market-detail-top"><div><h4>${m.handle}</h4><p>${m.note || 'Live Agent Network score plus market availability.'}</p></div><div class="stake" style="color:${colorFor(m)}">${Number(m.stake || 0)} VARA</div></div><div class="detail-grid"><div><span>beta score</span><b>${m.score || 0}</b></div><div><span>verdict</span><b>${m.verdict || 'unscored'}</b></div><div><span>source</span><b>${m.sourceProgram || 'GraphQL'}</b></div></div><div class="prediction-split"><div class="bucket"><h5>All open predictions</h5><p>${describePositions(subjectPositions, 'No open predictions for this app yet.')}</p></div><div class="bucket"><h5>My predictions</h5><p>${walletHex ? describePositions(myPositions, 'None from connected wallet.') : 'Connect wallet to filter yours.'}</p></div></div>`;
+      document.querySelectorAll('[data-handle]').forEach(el => el.onclick = () => { selected = el.dataset.handle; const subjectInput = document.getElementById('tradeSubject'); if (subjectInput) subjectInput.value = selected; renderMarkets(); });
+      updatePayoutPreview();
+    }
+    async function loadLiveData(){
+      try {
+        const response = await fetch('./data/markets.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        markets = Array.isArray(data.markets) && data.markets.length ? data.markets : fallbackMarkets;
+        leaderboard = Array.isArray(data.leaderboard) && data.leaderboard.length ? data.leaderboard : fallbackLeaderboard;
+        openPositions = Array.isArray(data.openPositions) ? data.openPositions : [];
+        generatedAt = data.generatedAt;
+        selected = markets[0].handle;
+      } catch (error) {
+        console.warn('Using fallback market data:', error);
+      }
+      renderLeaderboard();
+      renderMarkets();
+    }
+    document.querySelector('.btn.primary')?.addEventListener('click', () => {
+      setTimeout(() => { document.querySelector('.terminal')?.classList.add('bump'); document.getElementById('connectWallet')?.focus(); setTimeout(()=>document.querySelector('.terminal')?.classList.remove('bump'), 900); }, 80);
+    });
+    function wireWalletUi(){
+      const connectBtn = document.getElementById('connectWallet');
+      const openBtn = document.getElementById('openPrediction');
+      const walletState = document.getElementById('walletState');
+      const txOutput = document.getElementById('txOutput');
+      const refreshBtn = document.getElementById('refreshPositions');
+      const setWalletState = (text) => { walletState.textContent = text; };
+      window.addEventListener('vara-markets-status', (event) => setWalletState(event.detail.status));
+      window.addEventListener('vara-markets-positions', (event) => mergeContractPositions(event.detail.positions));
+      window.addEventListener('vara-markets-wallet', (event) => { walletHex = event.detail.addressHex; renderMarkets(); });
+      if (!window.varaMarketsWallet) {
+        setWalletState('wallet module unavailable');
+        txOutput.textContent = 'Wallet bundle failed to load. Read-only market browser still works.';
+        return;
+      }
+      setWalletState(window.varaMarketsWallet.state().status);
+      connectBtn.onclick = async () => {
+        try {
+          connectBtn.disabled = true;
+          txOutput.textContent = 'Requesting wallet access…';
+          const account = await window.varaMarketsWallet.connect();
+          walletHex = window.varaMarketsWallet.state().addressHex;
+          renderMarkets();
+          openBtn.disabled = false;
+          txOutput.textContent = `Connected ${account.name}: ${account.address.slice(0,10)}…`;
+        } catch (error) {
+          txOutput.textContent = `Connect failed: ${error.message || error}`;
+        } finally {
+          connectBtn.disabled = false;
+        }
+      };
+      refreshBtn.onclick = async () => {
+        try {
+          refreshBtn.disabled = true;
+          txOutput.textContent = 'Refreshing positions from V2 contract…';
+          const positions = await window.varaMarketsWallet.exportPositions();
+          mergeContractPositions(positions);
+          txOutput.textContent = `Loaded ${positions.length} positions from V2 contract.`;
+        } catch (error) {
+          txOutput.textContent = `Refresh failed: ${error.message || error}`;
+        } finally {
+          refreshBtn.disabled = false;
+        }
+      };
+      openBtn.onclick = async () => {
+        try {
+          openBtn.disabled = true;
+          txOutput.textContent = 'Preparing transaction…';
+          const result = await window.varaMarketsWallet.openPrediction({
+            subject: document.getElementById('tradeSubject').value,
+            predictedDeltaCalls: Number(document.getElementById('tradePrediction').value),
+            stakeVara: Number(document.getElementById('tradeStake').value),
+            evidence: document.getElementById('tradeEvidence').value,
+          });
+          txOutput.textContent = `Opened. tx=${result.txHash} msg=${result.msgId || 'n/a'}`;
+        } catch (error) {
+          txOutput.textContent = `Open prediction failed: ${error.message || error}`;
+        } finally {
+          openBtn.disabled = !window.varaMarketsWallet.state().connected;
+        }
+      };
+    }
+    wireWalletUi();
+    range.addEventListener('input', renderMarkets);
+    ['tradeSubject','tradeStake','tradePrediction'].forEach(id => document.getElementById(id)?.addEventListener('input', updatePayoutPreview));
+    loadLiveData();
+  </script>
+</body>
+</html>

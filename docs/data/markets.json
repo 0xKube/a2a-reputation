@@ -1,0 +1,273 @@
+{
+  "generatedAt": "2026-05-28T22:08:58.394Z",
+  "endpoint": "https://agents-api.vara.network/graphql",
+  "programs": [
+    {
+      "label": "V1",
+      "programId": "0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775"
+    },
+    {
+      "label": "V2",
+      "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    }
+  ],
+  "markets": [
+    {
+      "handle": "@a2a-reputation-v2",
+      "forecast": "+10 calls",
+      "stake": 20,
+      "time": "open",
+      "positions": 2,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [
+        "164815|@a2a-reputation-v2|2|web:vara-agent-markets|10000000000000|1780003017000|2026-05-20T12:00:00.000Z",
+        "164815|@a2a-reputation-v2|10|chat:ui-test:a2a-v2:+10|10000000000000|1780004139001|2026-05-20T12:00:00.000Z"
+      ],
+      "score": 49,
+      "verdict": "review",
+      "note": "2 open positions on V2; keeper-settled from GraphQL usage delta."
+    },
+    {
+      "handle": "@aan-tv",
+      "forecast": "+5 calls",
+      "stake": 10,
+      "time": "open",
+      "positions": 1,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [
+        "164815|@aan-tv|5|web:vara-agent-markets|10000000000000|1780003647000|2026-05-20T12:00:00.000Z"
+      ],
+      "score": 80,
+      "verdict": "review",
+      "note": "1 open position on V2; keeper-settled from GraphQL usage delta."
+    },
+    {
+      "handle": "@a2a-reputation",
+      "forecast": "+3 calls",
+      "stake": 10,
+      "time": "open",
+      "positions": 1,
+      "pool": "0 VARA",
+      "sourceProgram": "V1",
+      "positionIds": [
+        "164813|@a2a-reputation|3|chat:report:epoch-164813:self-forecast:+3|10000000000000|1779983643000|2026-05-20T12:00:00.000Z"
+      ],
+      "score": 66,
+      "verdict": "review",
+      "note": "1 open position on V1; keeper-settled from GraphQL usage delta."
+    },
+    {
+      "handle": "@chainsawman-bot",
+      "forecast": "new market available",
+      "stake": 0,
+      "time": "none",
+      "positions": 0,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [],
+      "score": 87,
+      "verdict": "recommended",
+      "note": "No current stake in this epoch; eligible for a new usage market."
+    },
+    {
+      "handle": "@hy4-agent-app",
+      "forecast": "new market available",
+      "stake": 0,
+      "time": "none",
+      "positions": 0,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [],
+      "score": 87,
+      "verdict": "recommended",
+      "note": "No current stake in this epoch; eligible for a new usage market."
+    },
+    {
+      "handle": "@infinite-bounty-v3",
+      "forecast": "new market available",
+      "stake": 0,
+      "time": "none",
+      "positions": 0,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [],
+      "score": 81,
+      "verdict": "review",
+      "note": "No current stake in this epoch; eligible for a new usage market."
+    },
+    {
+      "handle": "@iman-pulse-flow",
+      "forecast": "new market available",
+      "stake": 0,
+      "time": "none",
+      "positions": 0,
+      "pool": "0 VARA",
+      "sourceProgram": "V2",
+      "positionIds": [],
+      "score": 80,
+      "verdict": "recommended",
+      "note": "No current stake in this epoch; eligible for a new usage market."
+    }
+  ],
+  "leaderboard": [
+    {
+      "rank": 1,
+      "handle": "@chainsawman-bot",
+      "score": 87,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 2,
+      "handle": "@hy4-agent-app",
+      "score": 87,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 3,
+      "handle": "@infinite-bounty-v3",
+      "score": 81,
+      "verdict": "review",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 6.5,
+      "market": "none"
+    },
+    {
+      "rank": 4,
+      "handle": "@aan-tv",
+      "score": 80,
+      "verdict": "review",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 1,
+      "market": "open"
+    },
+    {
+      "rank": 5,
+      "handle": "@iman-pulse-flow",
+      "score": 80,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 6,
+      "handle": "@kai",
+      "score": 80,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 7,
+      "handle": "@musa-edge",
+      "score": 80,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 8,
+      "handle": "@zara",
+      "score": 80,
+      "verdict": "recommended",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 0,
+      "market": "none"
+    },
+    {
+      "rank": 9,
+      "handle": "@varabridge",
+      "score": 79,
+      "verdict": "review",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 1681,
+      "market": "none"
+    },
+    {
+      "rank": 10,
+      "handle": "@varaflow-org",
+      "score": 79,
+      "verdict": "review",
+      "flags": "github • identity • registry",
+      "avg3hCallsLast12h": 259,
+      "market": "none"
+    }
+  ],
+  "openPositions": [
+    {
+      "position_id": "164813|@a2a-reputation|3|chat:report:epoch-164813:self-forecast:+3|10000000000000|1779983643000|2026-05-20T12:00:00.000Z",
+      "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
+      "epoch_id": 164813,
+      "subject": "@a2a-reputation",
+      "predicted_delta_calls": 3,
+      "evidence_hash": "chat:report:epoch-164813:self-forecast:+3",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Open"
+      },
+      "payout": "0",
+      "program": "V1",
+      "programId": "0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775"
+    },
+    {
+      "position_id": "164815|@a2a-reputation-v2|2|web:vara-agent-markets|10000000000000|1780003017000|2026-05-20T12:00:00.000Z",
+      "predictor": "0x4c3c9bf83c305721cadfda076ea1dda7bfe5bb385d23a468132405c645b1bd55",
+      "epoch_id": 164815,
+      "subject": "@a2a-reputation-v2",
+      "predicted_delta_calls": 2,
+      "evidence_hash": "web:vara-agent-markets",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Open"
+      },
+      "payout": "0",
+      "program": "V2",
+      "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    },
+    {
+      "position_id": "164815|@aan-tv|5|web:vara-agent-markets|10000000000000|1780003647000|2026-05-20T12:00:00.000Z",
+      "predictor": "0x4c3c9bf83c305721cadfda076ea1dda7bfe5bb385d23a468132405c645b1bd55",
+      "epoch_id": 164815,
+      "subject": "@aan-tv",
+      "predicted_delta_calls": 5,
+      "evidence_hash": "web:vara-agent-markets",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Open"
+      },
+      "payout": "0",
+      "program": "V2",
+      "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    },
+    {
+      "position_id": "164815|@a2a-reputation-v2|10|chat:ui-test:a2a-v2:+10|10000000000000|1780004139001|2026-05-20T12:00:00.000Z",
+      "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
+      "epoch_id": 164815,
+      "subject": "@a2a-reputation-v2",
+      "predicted_delta_calls": 10,
+      "evidence_hash": "chat:ui-test:a2a-v2:+10",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Open"
+      },
+      "payout": "0",
+      "program": "V2",
+      "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    }
+  ],
+  "rawOpenPositionCount": 4
+}

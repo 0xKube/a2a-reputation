@@ -10,7 +10,7 @@ use reputation_oracle_client::{
 
 #[cfg(test)]
 use reputation_oracle_client::{ReputationReportV2, ReputationScoresV2};
-use sails_rs::client::{GclientEnv, GearEnv};
+use sails_rs::client::{Actor, GclientEnv, GearEnv};
 use sails_rs::scale_codec::Decode;
 use serde::Deserialize;
 
@@ -554,7 +554,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let participant_stake = 1_000_000_000_000_000u128;
         let now_ms = (gclient::now_micros() / 1_000) as u64;
         let three_hours_ms = 3 * 60 * 60 * 1_000u64;
-        let first_window_end = now_ms.saturating_add(12_000);
+        let first_window_end = now_ms.saturating_add(30_000);
         let first_window_start = first_window_end.saturating_sub(three_hours_ms);
         let second_window_start = first_window_end;
         let second_window_end = second_window_start.saturating_add(three_hours_ms);
@@ -570,8 +570,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .with_value(participant_stake)
             .await?;
+
+        let predictor_api = api.with("//Alice")?;
+        let predictor_account = predictor_api.account_id();
+        let predictor_env = GclientEnv::new(predictor_api.clone());
+        let predictor_oracle = Actor::<ReputationOracleClientProgram, GclientEnv>::new(
+            predictor_env,
+            oracle.id(),
+        );
+        let mut predictor_service = predictor_oracle.reputation_oracle();
+        let third_party_prediction = predictor_service
+            .open_usage_prediction(
+                1,
+                subject.clone(),
+                first_window_start,
+                first_window_end,
+                200,
+                "hash:gclient-usage-prediction-third-party-winner".into(),
+            )
+            .with_value(participant_stake)
+            .await?;
+        let predictor_balance_before_settlement = predictor_api.free_balance(predictor_account.clone()).await?;
+
         println!("gclient smoke: waiting for first 3h window close on local node");
-        tokio::time::sleep(Duration::from_secs(14)).await;
+        tokio::time::sleep(Duration::from_secs(34)).await;
 
         let first_settlement = service
             .settle_usage_prediction(
@@ -581,7 +603,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
         assert_eq!(first_settlement.status, PredictionStatus::Lost);
-        assert_eq!(first_settlement.reward_pool_balance, participant_stake);
+        assert!(first_settlement.reward_pool_balance >= participant_stake);
+
+        let third_party_settlement = service
+            .settle_usage_prediction(
+                third_party_prediction.position_id.clone(),
+                200,
+                "hash:gclient-usage-snapshot-third-party-winner".into(),
+            )
+            .await?;
+        assert_eq!(third_party_settlement.status, PredictionStatus::Won);
+        assert!(third_party_settlement.payout > 0);
+        tokio::time::sleep(Duration::from_secs(2)).await;
+        let predictor_mailbox = predictor_api.get_mailbox_messages(10).await?;
+        assert!(
+            !predictor_mailbox.is_empty(),
+            "third-party predictor payout should be queued in predictor mailbox"
+        );
+        let payout_message_id = predictor_mailbox[0].0.id();
+        let (claimed_payout, _) = predictor_api.claim_value(payout_message_id).await?;
+        assert_eq!(claimed_payout, third_party_settlement.payout);
+        let predictor_balance_after = predictor_api.free_balance(predictor_account).await?;
+        assert!(
+            predictor_balance_after > predictor_balance_before_settlement,
+            "third-party predictor must receive payout after claiming mailbox value"
+        );
 
         let next_prediction = service
             .open_usage_prediction(
@@ -603,9 +649,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .reputation_oracle()
             .export_usage_predictions_chunk(0, 10)
             .await?;
-        assert_eq!(predictions.total, 2);
+        assert_eq!(predictions.total, 3);
         assert!(matches!(predictions.items[0].status, PredictionStatus::Lost));
-        assert!(matches!(predictions.items[1].status, PredictionStatus::Open));
+        assert!(matches!(predictions.items[1].status, PredictionStatus::Won));
+        assert!(matches!(predictions.items[2].status, PredictionStatus::Open));
         let early_next_settlement = service
             .settle_usage_prediction(
                 next_prediction.position_id.clone(),

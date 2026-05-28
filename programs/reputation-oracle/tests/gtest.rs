@@ -703,7 +703,6 @@ async fn usage_prediction_late_entries_pay_rising_penalty() {
     );
 }
 
-
 #[tokio::test]
 async fn usage_prediction_rejects_zero_stake_and_invalid_windows() {
     let program = deploy_oracle().await;
@@ -837,6 +836,65 @@ async fn usage_prediction_settlement_is_owner_or_operator_only_and_single_use() 
 }
 
 #[tokio::test]
+async fn usage_prediction_payout_is_sent_to_predictor_not_settler() {
+    let (program, env) = deploy_oracle_with_env().await;
+    let mut service_client = program.reputation_oracle();
+
+    service_client
+        .fund_reward_pool()
+        .with_value(PREDICTION_STAKE / 2)
+        .await
+        .unwrap();
+
+    let opened = service_client
+        .open_usage_prediction(
+            1,
+            "@third-party-predictor".to_string(),
+            0,
+            u64::MAX,
+            100,
+            "0xthird-party-winner".to_string(),
+        )
+        .with_actor_id(UNAUTHORIZED_ACTOR_ID.into())
+        .with_value(PREDICTION_STAKE)
+        .await
+        .unwrap();
+
+    let predictor_balance_before = env.system().balance_of(UNAUTHORIZED_ACTOR_ID);
+    let settler_balance_before = env.system().balance_of(ACTOR_ID);
+
+    let settled = service_client
+        .settle_usage_prediction(
+            opened.position_id.clone(),
+            100,
+            "0xthird-party-winner-snapshot".to_string(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(settled.status, PredictionStatus::Won);
+    assert_eq!(settled.payout, PREDICTION_STAKE + PREDICTION_STAKE / 2);
+
+    let predictor_mailbox = env.system().get_mailbox(UNAUTHORIZED_ACTOR_ID);
+    predictor_mailbox
+        .claim_value(
+            Log::builder()
+                .dest(UNAUTHORIZED_ACTOR_ID)
+                .source(program.id())
+                .payload(()),
+        )
+        .expect("predictor payout should be claimable from mailbox");
+
+    assert_eq!(
+        env.system().balance_of(UNAUTHORIZED_ACTOR_ID),
+        predictor_balance_before + settled.payout
+    );
+    assert!(
+        env.system().balance_of(ACTOR_ID) <= settler_balance_before,
+        "settler must not receive the predictor payout"
+    );
+}
+
+#[tokio::test]
 async fn usage_prediction_bonus_is_capped_by_available_reward_pool() {
     let program = deploy_oracle().await;
     let mut service_client = program.reputation_oracle();
@@ -908,14 +966,25 @@ async fn usage_prediction_multiple_winners_cannot_overdraw_reward_pool() {
         .unwrap();
 
     let first_settled = service_client
-        .settle_usage_prediction(first.position_id.clone(), 100, "0xwinner-one-snapshot".to_string())
+        .settle_usage_prediction(
+            first.position_id.clone(),
+            100,
+            "0xwinner-one-snapshot".to_string(),
+        )
         .await
         .unwrap();
-    assert_eq!(first_settled.payout, PREDICTION_STAKE + PREDICTION_STAKE / 2);
+    assert_eq!(
+        first_settled.payout,
+        PREDICTION_STAKE + PREDICTION_STAKE / 2
+    );
     assert_eq!(first_settled.reward_pool_balance, 0);
 
     let second_settled = service_client
-        .settle_usage_prediction(second.position_id.clone(), 100, "0xwinner-two-snapshot".to_string())
+        .settle_usage_prediction(
+            second.position_id.clone(),
+            100,
+            "0xwinner-two-snapshot".to_string(),
+        )
         .await
         .unwrap();
     assert_eq!(second_settled.payout, PREDICTION_STAKE);
@@ -940,7 +1009,11 @@ async fn usage_prediction_zero_actual_edge_cases_are_bounded() {
         .await
         .unwrap();
     let exact_zero_settled = service_client
-        .settle_usage_prediction(exact_zero.position_id.clone(), 0, "0xzero-zero-snapshot".to_string())
+        .settle_usage_prediction(
+            exact_zero.position_id.clone(),
+            0,
+            "0xzero-zero-snapshot".to_string(),
+        )
         .await
         .unwrap();
     assert_eq!(exact_zero_settled.status, PredictionStatus::Won);
@@ -960,7 +1033,11 @@ async fn usage_prediction_zero_actual_edge_cases_are_bounded() {
         .await
         .unwrap();
     let off_by_one_settled = service_client
-        .settle_usage_prediction(off_by_one.position_id.clone(), 1, "0xzero-one-snapshot".to_string())
+        .settle_usage_prediction(
+            off_by_one.position_id.clone(),
+            1,
+            "0xzero-one-snapshot".to_string(),
+        )
         .await
         .unwrap();
     assert_eq!(off_by_one_settled.status, PredictionStatus::Lost);
@@ -1006,7 +1083,12 @@ async fn usage_prediction_capacity_does_not_evict_open_positions() {
         .await
         .unwrap();
     assert_eq!(chunk.total, 128);
-    assert!(chunk.items.iter().all(|position| matches!(position.status, PredictionStatus::Open)));
+    assert!(
+        chunk
+            .items
+            .iter()
+            .all(|position| matches!(position.status, PredictionStatus::Open))
+    );
 }
 
 #[tokio::test]
@@ -1014,7 +1096,13 @@ async fn usage_prediction_concurrent_predictions_across_multiple_subjects() {
     let program = deploy_oracle().await;
     let mut service_client = program.reputation_oracle();
 
-    let subjects = vec!["@subject-a", "@subject-b", "@subject-c", "@subject-d", "@subject-e"];
+    let subjects = vec![
+        "@subject-a",
+        "@subject-b",
+        "@subject-c",
+        "@subject-d",
+        "@subject-e",
+    ];
     let mut positions = vec![];
 
     for (i, subject) in subjects.iter().enumerate() {
@@ -1058,7 +1146,12 @@ async fn usage_prediction_concurrent_predictions_across_multiple_subjects() {
         .await
         .unwrap();
     assert_eq!(chunk.total, 5);
-    assert!(chunk.items.iter().all(|position| matches!(position.status, PredictionStatus::Won)));
+    assert!(
+        chunk
+            .items
+            .iter()
+            .all(|position| matches!(position.status, PredictionStatus::Won))
+    );
 }
 
 #[tokio::test]
@@ -1087,7 +1180,11 @@ async fn usage_prediction_can_roll_to_next_three_hour_epoch_after_settlement() {
     env.run_next_block();
     env.run_next_block();
     let first_settled = service_client
-        .settle_usage_prediction(first.position_id.clone(), 118, "0xepoch-1-snapshot".to_string())
+        .settle_usage_prediction(
+            first.position_id.clone(),
+            118,
+            "0xepoch-1-snapshot".to_string(),
+        )
         .await
         .unwrap();
     assert_eq!(first_settled.status, PredictionStatus::Won);
@@ -1110,7 +1207,11 @@ async fn usage_prediction_can_roll_to_next_three_hour_epoch_after_settlement() {
     assert_eq!(second.window_end_ms, second_window_end);
 
     let early_second_settlement = service_client
-        .settle_usage_prediction(second.position_id.clone(), 92, "0xepoch-2-snapshot".to_string())
+        .settle_usage_prediction(
+            second.position_id.clone(),
+            92,
+            "0xepoch-2-snapshot".to_string(),
+        )
         .await;
     assert!(early_second_settlement.is_err());
 

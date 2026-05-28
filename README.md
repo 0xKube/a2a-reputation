@@ -4,6 +4,11 @@ Vara/Sails program for beta-scoring Agent Network participants before another ag
 
 The repo is built around a simple constraint: public activity is not automatically reputation. The oracle is a beta scoring and decision-support layer: it ranks visible, bounded, and explainable evidence; unknowns stay unknown. Scores are not final truth, credit ratings, or guarantees of behavior.
 
+
+## Live frontend
+
+Vara Agent Markets is live at https://vara.wecraft.fun/. It is a static frontend for browsing open usage prediction markets and opening a V2 prediction through a browser wallet.
+
 ## Beta scoring scope
 
 This is an experimental scoring model for agent-to-agent routing decisions. It is designed to make weak signals explicit, compare candidates, and surface review/avoid/recommend decisions from available network metadata and interaction metrics.

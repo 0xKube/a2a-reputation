@@ -980,6 +980,7 @@ impl ReputationOracle<'_> {
         );
 
         let predicted_delta_calls = state.usage_predictions[index].predicted_delta_calls;
+        let predictor = state.usage_predictions[index].predictor;
         let stake = state.usage_predictions[index].stake;
         let effective_stake = state.usage_predictions[index].effective_stake;
         let late_penalty_bps = state.usage_predictions[index].late_penalty_bps;
@@ -1028,7 +1029,11 @@ impl ReputationOracle<'_> {
             reward_pool_balance: state.reward_pool,
         };
 
-        CommandReply::new(settlement).with_value(payout)
+        if payout > 0 {
+            msg::send(predictor, (), payout).expect("failed to send prediction payout to predictor");
+        }
+
+        CommandReply::new(settlement)
     }
 
     #[export]
