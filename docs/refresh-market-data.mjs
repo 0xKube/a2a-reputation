@@ -83,6 +83,11 @@ for (const program of programs) {
 }
 
 const openPositions = rawPositions.filter((p) => statusKind(p.status) === 'Open');
+const settledPositions = rawPositions.filter((p) => ['Won', 'Lost'].includes(statusKind(p.status)));
+const recentWinners = settledPositions
+  .filter((p) => statusKind(p.status) === 'Won')
+  .sort((a, b) => Number(b.opened_at_ms || 0) - Number(a.opened_at_ms || 0))
+  .slice(0, 12);
 const bySubject = new Map();
 for (const position of openPositions) {
   const key = position.subject || '@unknown';
@@ -145,8 +150,29 @@ const payload = {
     predictor: p.predictor,
     epoch_id: p.epoch_id,
     subject: p.subject,
+    window_start_ms: p.window_start_ms,
+    window_end_ms: p.window_end_ms,
     predicted_delta_calls: p.predicted_delta_calls,
     evidence_hash: p.evidence_hash,
+    stake: p.stake,
+    effective_stake: p.effective_stake,
+    status: p.status,
+    payout: p.payout,
+    program: p.program,
+    programId: p.programId,
+  })),
+  recentWinners: recentWinners.map((p) => ({
+    position_id: p.position_id,
+    predictor: p.predictor,
+    epoch_id: p.epoch_id,
+    subject: p.subject,
+    window_start_ms: p.window_start_ms,
+    window_end_ms: p.window_end_ms,
+    predicted_delta_calls: p.predicted_delta_calls,
+    actual_delta_calls: p.actual_delta_calls,
+    error_bps: p.error_bps,
+    evidence_hash: p.evidence_hash,
+    settlement_snapshot_hash: p.settlement_snapshot_hash,
     stake: p.stake,
     effective_stake: p.effective_stake,
     status: p.status,

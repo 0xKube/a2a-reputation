@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-28T22:43:28.770Z",
+  "generatedAt": "2026-05-28T22:50:44.964Z",
   "endpoint": "https://agents-api.vara.network/graphql",
   "programs": [
     {
@@ -195,6 +195,8 @@
       "predictor": "0x4c3c9bf83c305721cadfda076ea1dda7bfe5bb385d23a468132405c645b1bd55",
       "epoch_id": 164815,
       "subject": "@a2a-reputation-v2",
+      "window_start_ms": "1780003003757",
+      "window_end_ms": "1780013803757",
       "predicted_delta_calls": 2,
       "evidence_hash": "web:vara-agent-markets",
       "stake": "10000000000000",
@@ -211,6 +213,8 @@
       "predictor": "0x4c3c9bf83c305721cadfda076ea1dda7bfe5bb385d23a468132405c645b1bd55",
       "epoch_id": 164815,
       "subject": "@aan-tv",
+      "window_start_ms": "1780003635820",
+      "window_end_ms": "1780014435820",
       "predicted_delta_calls": 5,
       "evidence_hash": "web:vara-agent-markets",
       "stake": "10000000000000",
@@ -227,6 +231,8 @@
       "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
       "epoch_id": 164815,
       "subject": "@a2a-reputation-v2",
+      "window_start_ms": "1780004032956",
+      "window_end_ms": "1780014832956",
       "predicted_delta_calls": 10,
       "evidence_hash": "chat:ui-test:a2a-v2:+10",
       "stake": "10000000000000",
@@ -243,6 +249,8 @@
       "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
       "epoch_id": 164816,
       "subject": "@a2a-reputation-v2",
+      "window_start_ms": "1780012800000",
+      "window_end_ms": "1780023600000",
       "predicted_delta_calls": 5,
       "evidence_hash": "chat:site-launch:next-3h:+5",
       "stake": "10000000000000",
@@ -253,6 +261,50 @@
       "payout": "0",
       "program": "V2",
       "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    }
+  ],
+  "recentWinners": [
+    {
+      "position_id": "164813|@a2a-reputation|3|chat:report:epoch-164813:self-forecast:+3|10000000000000|1779983643000|2026-05-20T12:00:00.000Z",
+      "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
+      "epoch_id": 164813,
+      "subject": "@a2a-reputation",
+      "window_start_ms": "1779983611751",
+      "window_end_ms": "1779994411751",
+      "predicted_delta_calls": 3,
+      "actual_delta_calls": 3,
+      "error_bps": 0,
+      "evidence_hash": "chat:report:epoch-164813:self-forecast:+3",
+      "settlement_snapshot_hash": "graphql:0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775:4->7:window:1779983611751-1779994411751",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Won"
+      },
+      "payout": "15000000000000",
+      "program": "V1",
+      "programId": "0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775"
+    },
+    {
+      "position_id": "164811|@a2a-reputation|2|chat:ukint-vs:first-prediction:+2|10000000000000|1779971532000|2026-05-20T12:00:00.000Z",
+      "predictor": "0x26123386356f179fb44d7c27081d6617e3f6160f489742cb8e4ccddc6e084547",
+      "epoch_id": 164811,
+      "subject": "@a2a-reputation",
+      "window_start_ms": "1779969151750",
+      "window_end_ms": "1779979951750",
+      "predicted_delta_calls": 2,
+      "actual_delta_calls": 2,
+      "error_bps": 0,
+      "evidence_hash": "chat:ukint-vs:first-prediction:+2",
+      "settlement_snapshot_hash": "graphql:0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775:2->4:window:1779969151750-1779979951750",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Won"
+      },
+      "payout": "15000000000000",
+      "program": "V1",
+      "programId": "0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775"
     }
   ],
   "rawOpenPositionCount": 4

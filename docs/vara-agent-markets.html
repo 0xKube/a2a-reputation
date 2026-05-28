@@ -132,6 +132,15 @@
     .trade-actions button:disabled { cursor:not-allowed; opacity:.55; }
     .tx-output { margin-top:8px; min-height:28px; color:var(--muted); font-size:11px; line-height:1.35; font-family:"Geist Mono", ui-monospace, monospace; overflow-wrap:anywhere; }
     .prediction-split { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+    .winners-panel { border:1px solid rgba(156,255,74,.18); border-radius:12px; background:#101010; margin-top:8px; padding:10px; }
+    .winners-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:8px; }
+    .winners-head h5 { margin:0; font-size:11px; color:var(--green); text-transform:uppercase; letter-spacing:.1em; }
+    .winners-head span { color:var(--muted); font-size:11px; font-family:"Geist Mono", ui-monospace, monospace; }
+    .winner-row { display:grid; grid-template-columns:1fr auto; gap:10px; padding:7px 0; border-top:1px solid var(--line-soft); font-size:12px; }
+    .winner-row:first-of-type { border-top:0; }
+    .winner-row b { color:var(--text); }
+    .winner-row span { color:var(--muted); font-family:"Geist Mono", ui-monospace, monospace; }
+    .winner-row .pay { color:var(--green); font-weight:800; white-space:nowrap; }
     .prediction-split .bucket { border:1px solid var(--line-soft); border-radius:12px; background:#101010; padding:10px; }
     .prediction-split h5 { margin:0 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
     .prediction-split p { margin:0; color:var(--soft); font-size:12px; line-height:1.4; font-family:"Geist Mono", ui-monospace, monospace; overflow-wrap:anywhere; }
@@ -190,7 +199,7 @@
       .terminal-body { padding: 14px; }
       .market { margin-inline: -6px; padding-inline: 8px; }
       .detail-grid { grid-template-columns: 1fr; }
-      .trade-grid, .trade-actions, .prediction-split { grid-template-columns:1fr; }
+      .trade-grid, .trade-actions, .prediction-split, .winner-row { grid-template-columns:1fr; }
       .mini-stats { grid-template-columns: 1fr; }
       .section-title p { font-size: 14px; }
       .row { grid-template-columns: 28px 1fr 42px 62px 58px; font-size: 12px; }
@@ -291,6 +300,7 @@
     let leaderboard = fallbackLeaderboard;
     let generatedAt = null;
     let openPositions = [];
+    let recentWinners = [];
     let walletHex = null;
     let selected = markets[0].handle;
     const tabs = document.getElementById('marketTabs');
@@ -303,6 +313,12 @@
     const colorFor = (m) => m.stake > 0 ? 'var(--green)' : 'var(--muted)';
     const vara = (raw) => Number(BigInt(raw || '0')) / 1_000_000_000_000;
     const statusKind = (status) => typeof status === 'string' ? status : (status?.kind || Object.keys(status || {})[0] || 'Unknown');
+    const shortAddr = (value) => String(value || "").slice(0,10) + "…";
+    function renderRecentWinners(){
+      if (!recentWinners.length) return `<div class="winners-panel"><div class="winners-head"><h5>Recent winners</h5><span>contract export</span></div><div class="sub">No settled winners yet.</div></div>`;
+      const rows = recentWinners.slice(0,4).map(w => `<div class="winner-row"><div><b>${w.subject}</b> · epoch ${w.epoch_id}<br><span>${shortAddr(w.predictor)} forecast +${w.predicted_delta_calls} / actual +${w.actual_delta_calls} · ${w.program}</span></div><div class="pay">${vara(w.payout)} VARA</div></div>`).join("");
+      return `<div class="winners-panel"><div class="winners-head"><h5>Recent winners</h5><span>${recentWinners.length} won</span></div>${rows}</div>`;
+    }
     function updatePayoutPreview(){
       const out = document.getElementById('payoutPreview');
       const subject = document.getElementById('tradeSubject')?.value || selected;
@@ -353,7 +369,7 @@
       const subjectPositions = openPositions.filter(p => p.subject === m.handle && statusKind(p.status) === 'Open');
       const myPositions = walletHex ? subjectPositions.filter(p => String(p.predictor || '').toLowerCase() === walletHex.toLowerCase()) : [];
       const describePositions = (items, empty) => items.length ? items.map(p => `+${p.predicted_delta_calls} • ${vara(p.effective_stake || p.stake)} VARA • ${String(p.predictor || '').slice(0,10)}…`).join('<br>') : empty;
-      detail.innerHTML = `<div class="market-detail-top"><div><h4>${m.handle}</h4><p>${m.note || 'Live Agent Network score plus market availability.'}</p></div><div class="stake" style="color:${colorFor(m)}">${Number(m.stake || 0)} VARA</div></div><div class="detail-grid"><div><span>beta score</span><b>${m.score || 0}</b></div><div><span>verdict</span><b>${m.verdict || 'unscored'}</b></div><div><span>source</span><b>${m.sourceProgram || 'GraphQL'}</b></div></div><div class="prediction-split"><div class="bucket"><h5>All open predictions</h5><p>${describePositions(subjectPositions, 'No open predictions for this app yet.')}</p></div><div class="bucket"><h5>My predictions</h5><p>${walletHex ? describePositions(myPositions, 'None from connected wallet.') : 'Connect wallet to filter yours.'}</p></div></div>`;
+      detail.innerHTML = `<div class="market-detail-top"><div><h4>${m.handle}</h4><p>${m.note || 'Live Agent Network score plus market availability.'}</p></div><div class="stake" style="color:${colorFor(m)}">${Number(m.stake || 0)} VARA</div></div><div class="detail-grid"><div><span>beta score</span><b>${m.score || 0}</b></div><div><span>verdict</span><b>${m.verdict || 'unscored'}</b></div><div><span>source</span><b>${m.sourceProgram || 'GraphQL'}</b></div></div><div class="prediction-split"><div class="bucket"><h5>All open predictions</h5><p>${describePositions(subjectPositions, 'No open predictions for this app yet.')}</p></div><div class="bucket"><h5>My predictions</h5><p>${walletHex ? describePositions(myPositions, 'None from connected wallet.') : 'Connect wallet to filter yours.'}</p></div>${renderRecentWinners()}</div>`;
       document.querySelectorAll('[data-handle]').forEach(el => el.onclick = () => { selected = el.dataset.handle; const subjectInput = document.getElementById('tradeSubject'); if (subjectInput) subjectInput.value = selected; renderMarkets(); });
       updatePayoutPreview();
     }
@@ -365,6 +381,7 @@
         markets = Array.isArray(data.markets) && data.markets.length ? data.markets : fallbackMarkets;
         leaderboard = Array.isArray(data.leaderboard) && data.leaderboard.length ? data.leaderboard : fallbackLeaderboard;
         openPositions = Array.isArray(data.openPositions) ? data.openPositions : [];
+        recentWinners = Array.isArray(data.recentWinners) ? data.recentWinners : [];
         generatedAt = data.generatedAt;
         selected = markets[0].handle;
       } catch (error) {
