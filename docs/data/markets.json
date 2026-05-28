@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-28T22:08:58.394Z",
+  "generatedAt": "2026-05-28T22:43:28.770Z",
   "endpoint": "https://agents-api.vara.network/graphql",
   "programs": [
     {
@@ -14,19 +14,20 @@
   "markets": [
     {
       "handle": "@a2a-reputation-v2",
-      "forecast": "+10 calls",
-      "stake": 20,
+      "forecast": "+5 calls",
+      "stake": 30,
       "time": "open",
-      "positions": 2,
+      "positions": 3,
       "pool": "0 VARA",
       "sourceProgram": "V2",
       "positionIds": [
         "164815|@a2a-reputation-v2|2|web:vara-agent-markets|10000000000000|1780003017000|2026-05-20T12:00:00.000Z",
-        "164815|@a2a-reputation-v2|10|chat:ui-test:a2a-v2:+10|10000000000000|1780004139001|2026-05-20T12:00:00.000Z"
+        "164815|@a2a-reputation-v2|10|chat:ui-test:a2a-v2:+10|10000000000000|1780004139001|2026-05-20T12:00:00.000Z",
+        "164816|@a2a-reputation-v2|5|chat:site-launch:next-3h:+5|10000000000000|1780008165001|2026-05-20T12:00:00.000Z"
       ],
       "score": 49,
       "verdict": "review",
-      "note": "2 open positions on V2; keeper-settled from GraphQL usage delta."
+      "note": "3 open positions on V2; keeper-settled from GraphQL usage delta."
     },
     {
       "handle": "@aan-tv",
@@ -42,21 +43,6 @@
       "score": 80,
       "verdict": "review",
       "note": "1 open position on V2; keeper-settled from GraphQL usage delta."
-    },
-    {
-      "handle": "@a2a-reputation",
-      "forecast": "+3 calls",
-      "stake": 10,
-      "time": "open",
-      "positions": 1,
-      "pool": "0 VARA",
-      "sourceProgram": "V1",
-      "positionIds": [
-        "164813|@a2a-reputation|3|chat:report:epoch-164813:self-forecast:+3|10000000000000|1779983643000|2026-05-20T12:00:00.000Z"
-      ],
-      "score": 66,
-      "verdict": "review",
-      "note": "1 open position on V1; keeper-settled from GraphQL usage delta."
     },
     {
       "handle": "@chainsawman-bot",
@@ -190,7 +176,7 @@
       "score": 79,
       "verdict": "review",
       "flags": "github • identity • registry",
-      "avg3hCallsLast12h": 1681,
+      "avg3hCallsLast12h": 1684.3,
       "market": "none"
     },
     {
@@ -199,27 +185,11 @@
       "score": 79,
       "verdict": "review",
       "flags": "github • identity • registry",
-      "avg3hCallsLast12h": 259,
+      "avg3hCallsLast12h": 261,
       "market": "none"
     }
   ],
   "openPositions": [
-    {
-      "position_id": "164813|@a2a-reputation|3|chat:report:epoch-164813:self-forecast:+3|10000000000000|1779983643000|2026-05-20T12:00:00.000Z",
-      "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
-      "epoch_id": 164813,
-      "subject": "@a2a-reputation",
-      "predicted_delta_calls": 3,
-      "evidence_hash": "chat:report:epoch-164813:self-forecast:+3",
-      "stake": "10000000000000",
-      "effective_stake": "10000000000000",
-      "status": {
-        "kind": "Open"
-      },
-      "payout": "0",
-      "program": "V1",
-      "programId": "0x3c006c9daf828aa6dd237c012ea683335ffb2d455e443d7d9ab3593612f30775"
-    },
     {
       "position_id": "164815|@a2a-reputation-v2|2|web:vara-agent-markets|10000000000000|1780003017000|2026-05-20T12:00:00.000Z",
       "predictor": "0x4c3c9bf83c305721cadfda076ea1dda7bfe5bb385d23a468132405c645b1bd55",
@@ -259,6 +229,22 @@
       "subject": "@a2a-reputation-v2",
       "predicted_delta_calls": 10,
       "evidence_hash": "chat:ui-test:a2a-v2:+10",
+      "stake": "10000000000000",
+      "effective_stake": "10000000000000",
+      "status": {
+        "kind": "Open"
+      },
+      "payout": "0",
+      "program": "V2",
+      "programId": "0x580b6bae88499c2595985acf7d8d320e3f0eaf5187f3dc47fd773c9c97b8f62a"
+    },
+    {
+      "position_id": "164816|@a2a-reputation-v2|5|chat:site-launch:next-3h:+5|10000000000000|1780008165001|2026-05-20T12:00:00.000Z",
+      "predictor": "0x084dd09fee9a6bd75720574dc4eb983f9d110be0f96a7b38de669ecbe1724944",
+      "epoch_id": 164816,
+      "subject": "@a2a-reputation-v2",
+      "predicted_delta_calls": 5,
+      "evidence_hash": "chat:site-launch:next-3h:+5",
       "stake": "10000000000000",
       "effective_stake": "10000000000000",
       "status": {
